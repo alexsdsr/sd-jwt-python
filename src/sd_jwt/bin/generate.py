@@ -105,10 +105,30 @@ def generate_test_case_data(settings: Dict, testcase_path: Path, type: str):
 
     # Write the test case data to the directory of the test case
 
+    claims_vs_salts = {}
+    for disclosure in sdjwt_at_issuer.ii_disclosures:
+        data = {disclosure.key: disclosure.salt}
+        claims_vs_salts.update(data)
+
     _artifacts = {
         "user_claims": (
             remove_sdobj_wrappers(testcase["user_claims"]),
             "User Claims",
+            "json",
+        ),
+        "issuer_key": (
+            demo_keys["issuer_key"].export_to_pem(True, None).decode("utf-8"),
+            "Issuer private key",
+            "pem",
+        ),
+        "holder_key": (
+            demo_keys["holder_key"].export_to_pem(True, None).decode("utf-8"),
+            "Issuer private key",
+            "pem",
+        ),
+        "claims_vs_salts": (
+            claims_vs_salts,
+            "Claims with Salts",
             "json",
         ),
         "sd_jwt_payload": (

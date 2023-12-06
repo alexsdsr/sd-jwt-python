@@ -15,11 +15,11 @@ class SDJWTDisclosure:
         self._hash()
 
     def _hash(self):
-        salt = self.issuer._generate_salt()
+        self._salt = self.issuer._generate_salt()
         if self.key is None:
-            data = [salt, self.value]
+            data = [self._salt, self.value]
         else:
-            data = [salt, self.key, self.value]
+            data = [self._salt, self.key, self.value]
 
         self._json = dumps(data).encode("utf-8")
 
@@ -29,6 +29,10 @@ class SDJWTDisclosure:
     @property
     def hash(self):
         return self._hash
+
+    @property
+    def salt(self):
+        return self._salt
 
     @property
     def b64(self):
